@@ -1,60 +1,61 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Edited by: Isac C.
+# isaccavalcante AT alu DOT ufc DOT br
 import os
 import sys
 import time
-
+import requests
+from bs4 import BeautifulSoup
 sys.path.append(os.path.join(sys.path[0], 'src'))
-
 from check_status import check_status
 from feed_scanner import feed_scanner
 from follow_protocol import follow_protocol
 from instabot import InstaBot
 from unfollow_protocol import unfollow_protocol
+from random import shuffle
 
 bot = InstaBot(
-    login="username",
-    password="password",
-    like_per_day=1000,
-    comments_per_day=0,
-    tag_list=['follow4follow', 'f4f', 'cute'],
-    tag_blacklist=['rain', 'thunderstorm'],
+    login="justgirls.me",
+    password="500reaispracada",
+    like_per_day=999,
+    comments_per_day=7,
+    tag_list=['follow4follow', 'f4f', 'cute', 'likeforlike', 'l4l',
+"love", "instagood", "photooftheday", "beautiful", "fashion", "tbt", 
+"happy", "cute", "me", "follow", "picoftheday", "selfie", "instadaily",    
+"friends", "summer", "girl", "art", "sexy", "hot","nofilter", "fitness",
+"style", "life", "travel","pretty", "makeup"],
+    tag_blacklist=['blacklist1','blacklist2'],
     user_blacklist={},
-    max_like_for_one_tag=50,
-    follow_per_day=300,
+    max_like_for_one_tag=99,
+    follow_per_day=333,
     follow_time=1 * 60,
-    unfollow_per_day=300,
+    unfollow_per_day=111,
     unfollow_break_min=15,
     unfollow_break_max=30,
     log_mod=0,
     proxy='',
     # List of list of words, each of which will be used to generate comment
     # For example: "This shot feels wow!"
-    comment_list=[["this", "the", "your"],
-                  ["photo", "picture", "pic", "shot", "snapshot"],
-                  ["is", "looks", "feels", "is really"],
-                  ["great", "super", "good", "very good", "good", "wow",
-                   "WOW", "cool", "GREAT","magnificent", "magical",
-                   "very cool", "stylish", "beautiful", "so beautiful",
-                   "so stylish", "so professional", "lovely",
-                   "so lovely", "very lovely", "glorious","so glorious",
-                   "very glorious", "adorable", "excellent", "amazing"],
-                  [".", "..", "...", "!", "!!", "!!!"]],
+    comment_list=[["this", "the", "your", "a", "Wow. this", "Nice! this"], 
+                  #######
+                  ["photo", "picture", "pic", "shot", "snapshot", "take"], 
+                  #######
+                  ["is", "looks", "feels", "is really", "really", "is kinda", "is so", "is almost"], 
+                  #######
+                  ["great", "super", "good",
+                    "cool", "GREAT","magnificent", "magical",
+                    "stylish", "beautiful", "so beautiful",
+                    "professional", "so lovely", "lovely", "glorious",
+                   "gorgeous", "adorable", "excellent", "amazing"],
+                  [".", "...", "!", ". May I repost it?", ". Can I repost it?"]],
     # Use unwanted_username_list to block usernames containing a string
     ## Will do partial matches; i.e. 'mozart' will block 'legend_mozart'
     ### 'free_followers' will be blocked because it contains 'free'
-    unwanted_username_list=[
-        'second', 'stuff', 'art', 'project', 'love', 'life', 'food', 'blog',
-        'free', 'keren', 'photo', 'graphy', 'indo', 'travel', 'art', 'shop',
-        'store', 'sex', 'toko', 'jual', 'online', 'murah', 'jam', 'kaos',
-        'case', 'baju', 'fashion', 'corp', 'tas', 'butik', 'grosir', 'karpet',
-        'sosis', 'salon', 'skin', 'care', 'cloth', 'tech', 'rental', 'kamera',
-        'beauty', 'express', 'kredit', 'collection', 'impor', 'preloved',
-        'follow', 'follower', 'gain', '.id', '_id', 'bags'
-    ],
-    unfollow_whitelist=['example_user_1', 'example_user_2'])
+    unwanted_username_list= ["user1", "user2"],
+    unfollow_whitelist=['ana_hauachen', 'isac.jpg'])
 while True:
-
+    shuffle(bot.tag_list)
     #print("# MODE 0 = ORIGINAL MODE BY LEVPASHA")
     #print("## MODE 1 = MODIFIED MODE BY KEMONG")
     #print("### MODE 2 = ORIGINAL MODE + UNFOLLOW WHO DON'T FOLLOW BACK")
@@ -69,7 +70,7 @@ while True:
     # DON'T USE MODE 5 FOR A LONG PERIOD. YOU RISK YOUR ACCOUNT FROM GETTING BANNED
     ## USE MODE 5 IN BURST MODE, USE IT TO UNFOLLOW PEOPLE AS MANY AS YOU WANT IN SHORT TIME PERIOD
 
-    mode = 0
+    mode = 2
 
     #print("You choose mode : %i" %(mode))
     #print("CTRL + C to cancel this operation or wait 30 seconds to start")
@@ -80,16 +81,22 @@ while True:
 
     elif mode == 1:
         check_status(bot)
+        # Enquanto seguir mais que 200 além dos seguidores:
+        # começar a dar unfollow em quem não segue de volta
+        # Exemplo: seguindo 1200, com 1000 seguidores
         while bot.self_following - bot.self_follower > 200:
             unfollow_protocol(bot)
-            time.sleep(10 * 60)
+            time.sleep(15 * 60) # Espera 15 minutos
             check_status(bot)
-        while bot.self_following - bot.self_follower < 400:
+        # Enquanto seguir menos que 400 além dos seguidores:
+        # ????
+        # Exemplo: seguindo 1000, seguidores 1200 
+        while bot.self_following - bot.self_follower < 200:
             while len(bot.user_info_list) < 50:
-                feed_scanner(bot)
-                time.sleep(5 * 60)
-                follow_protocol(bot)
-                time.sleep(10 * 60)
+                feed_scanner(bot) # ???
+                time.sleep(5 * 60) # Espera 5 minutos
+                follow_protocol(bot) # ???
+                time.sleep(10 * 60) # Espera 10 minutos
                 check_status(bot)
 
     elif mode == 2:

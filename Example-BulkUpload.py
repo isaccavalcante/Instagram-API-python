@@ -10,16 +10,16 @@ from os import listdir
 from os.path import isfile, join
 from random import randint
 from InstagramAPI import InstagramAPI
+import os
 
-PhotoPath = "/home/isac/Dropbox/Instagram-API-python/examples/ibagens/" # mude o diretório para a pasta com as fotos
-IGUSER    = "justgirls.me" # mude para o nome de usuário
-PASSWD    = "500reaispracada" # mude para a senha
+PhotoPath = "imagens/" # mude o diretório para a pasta com as fotos
+IGUSER    = "resultadosrapidos" # mude para o nome de usuário
+PASSWD    = "zgtafiii111" # mude para a senha
 # mude para a hashtag
 IGCaption = "LEGENDA AQUI #hashtag" # TODO: Receber uma lista de legendas
 
-
 os.chdir(PhotoPath)
-ListFiles = [f for f in listdir(PhotoPath) if isfile(join(PhotoPath, f))]
+ListFiles = [f for f in listdir(".") if isfile(join("", f))]
 print ("Total de imagens nesta pasta:" + str (len(ListFiles)))
 
 # fazendo login 
@@ -28,7 +28,8 @@ igapi.login()
 
 # Percorrendo as imagens da pasta
 for i in range(len(ListFiles)):
-    with open("log.txt", "a") as arquivo:
+    os.system("ls")
+    with open("/tmp/log.txt", "a") as arquivo:
         photo = ListFiles[i]
         msg  = "Progresso :" + str([i+1]) + " de " + str(len(ListFiles))
         print(msg)
